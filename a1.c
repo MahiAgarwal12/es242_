@@ -10,21 +10,32 @@
  * Selections should be generated in lexicographic order.
  * a[0..k-1] is the smallest selection and a[n-k..n-1] is the largest.
  */
+#include <stdio.h>
+
 void generate_selections(int a[], int n, int k, int b[], void *data, void (*process_selection)(int *b, int k, void *data))
 {
-    b[0] = 2; b[1] = 1;
-    process_selection(b, 2, data);
-    b[0] = 2; b[1] = 6;
-    process_selection(b, 2, data);
-    b[0] = 2; b[1] = 5;
-    process_selection(b, 2, data);
-    b[0] = 1; b[1] = 6;
-    process_selection(b, 2, data);
-    b[0] = 1; b[1] = 5;
-    process_selection(b, 2, data);
-    b[0] = 6; b[1] = 5;
-    process_selection(b, 2, data);
+    helper_function(a, n, k, b, 0, k, data, process_selection);
 }
+
+void helper_function(int a[], int n, int k, int b[], int index, int remaining, void *data, void (*process_selection)(int *b, int k, void *data))
+{
+    if(remaining==0){
+        process_selection(b,k,data);
+        return;
+
+    }
+    for (int i = index;i<=n-remaining;i++){
+        b[k-remaining]=a[i];
+        helper_function(a, n, k, b, i + 1, remaining - 1, data,process_selection);
+    }
+}
+void print_combination(int *b,int k,void*data){
+    for(int i=0 ; i<k;i++){
+        printf("%d",b[i]);
+    }
+    printf("\n");
+}
+
 
 /*
  * See Exercise 2 (a), page 94 in Jeff Erickson's textbook.
