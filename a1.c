@@ -45,12 +45,38 @@ void print_combination(int *b,int k,void*data){
  * The dictionary parameter is an array of words, sorted in dictionary order.
  * nwords is the number of words in this dictionary.
  */
-void generate_splits(const char *source, const char *dictionary[], int nwords, char buf[], void *data, void (*process_split)(char buf[], void *data))
+int IsWord(char* word1, const char* dictionary[], int nwords) {
+    for (int i = 0; i < nwords; i++) {
+        if (strcmp(word1, dictionary[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void generate_splits(const char *source, const char *dictionary[], int nwords, char buf[], void *data, void (*process_split)(char buf[], void *data)) 
 {
-    strcpy(buf, "art is toil");
-    process_split(buf, data);
-    strcpy(buf, "artist oil");
-    process_split(buf, data);
+    if (*source == '\0') {
+        process_split(buf, data);
+        return;
+    }
+
+    for (int i = 1; source[i - 1] != '\0'; i++) {
+        char word1[100]; 
+        strncpy(word1, source, i); 
+        word1[i] = '\0'; 
+
+        if (IsWord(word1, dictionary, nwords)) 
+        {
+            char ebuf[100]; 
+            if (source[i] == '\0') {
+                snprintf(ebuf, sizeof(ebuf), "%s%s", buf, word1);
+            } else {
+                snprintf(ebuf, sizeof(ebuf), "%s%s ", buf, word1);
+            }
+            generate_splits(source + i, dictionary, nwords, ebuf, data, process_split);
+        }
+    }
 }
 
 /*
