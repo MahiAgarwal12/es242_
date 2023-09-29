@@ -48,12 +48,32 @@ void generate_splits(const char *source, const char *dictionary[], int nwords, c
  */
 void previous_permutation(int a[], int n)
 {
-    a[0] = 1;
-    a[1] = 5;
-    a[2] = 4;
-    a[3] = 6;
-    a[4] = 3;
-    a[5] = 2;
+    int i = n-1;
+    while(i>=0){
+        if (i == 0){
+            return;
+            }
+        if (a[i-1] > a[i]){
+            break;
+            }
+        i--;
+        }
+   //reverse order of a[i:n]
+    for (int j = 0 ; j<(n-i)/2 ; j++){
+        int t = a[i+j];
+        a[i+j] = a[n-j-1];
+        a[n-j-1] = t;
+
+    }
+    for(int k=i; k<n;k++){
+        if (a[k]<a[i-1]){
+            printf("%d\n", k);
+            int t = a[i-1];
+            a[i-1] = a[k];
+            a[k] = t;
+            return;
+        }
+    }
 }
 
 /* Write your tests here. Use the previous assignment for reference. */
